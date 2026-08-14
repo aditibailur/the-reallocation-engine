@@ -195,3 +195,27 @@ On a fresh setup the audit mostly reports missing data and readiness blockers.
 Once students have real outcomes, extend the TODO sections in the script to
 measure conversion by sponsorship tier, liveness, SOC group, scan source, and
 recurring blockers.
+
+## fetch-real-postings.py (feeds skill-demand-monitor.mjs)
+
+Combines multiple companies' Greenhouse/Lever scrapes into one file matching
+`scripts/score/skill-demand-monitor.mjs`'s input schema, in one command:
+
+```bash
+cd scripts/ats
+python3 fetch-real-postings.py \
+  --greenhouse "Anthropic" "Databricks" --lever "Palantir" \
+  -o ../../private/real-postings/my-run.json
+```
+
+Prints how many fetched postings have usable `description_text` before you
+even run the scorer. Real postings land in `private/`, never committed.
+
+**Known limitation, found 2026-08-14 (see `logs/RUN_LOG.md`):** the Greenhouse
+scraper's `normalize_job()` hardcodes `description_text: ""` unconditionally
+— it never populates the field regardless of what the Greenhouse API returns.
+Greenhouse-sourced postings will mostly be rejected by
+`skill-demand-monitor.mjs`'s schema gate as a result. Lever's scraper is
+unaffected — it populates `description_text` correctly. This is a real,
+disclosed limitation of the Greenhouse scraper itself, not of
+`fetch-real-postings.py` or `skill-demand-monitor.mjs`.

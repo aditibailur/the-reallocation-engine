@@ -1,160 +1,108 @@
 ---
-status: DRAFT
-todos_open: 11
-last_gate: null
+status: RUNNABLE-SAMPLE
+todos_open: 0
+last_gate: "sample-run, 2026-08-14, logs/RUN_LOG.md#2026-08-14"
 attestation: null
-recipe_version: 0.1.0
+recipe_version: 1.0.0
 ---
 
-# skill-demand-monitor -- Tool And Stack Signals For Job Intelligence
+# skill-demand-monitor — Tool And Stack Signals For Job Intelligence
 
-## Purpose
+## 1. Executive Summary
 
-Adapted from martech/product positioning and tech-stack signal recipes. Use this recipe to infer which tools, platforms, and technical skills are appearing in target-company materials and job postings, then map them to resume keywords, training priorities, and interview preparation.
+Infers which tools, platforms, and skills are mentioned across a set of job
+postings, optionally narrowed to a specific role (e.g. "AI Engineer" rather than
+the broader "ML Engineering" category), and reports a ranked, evidence-linked
+frequency signal: which skills come up, in how many *distinct* postings, and which
+postings back that count. It is a demand-**mention** signal, not a hiring-
+**requirement** signal — see `recipes/skill-demand-monitor.card.md` for the full
+boundary. This recipe promotes the prior DRAFT specification (v0.1.0, eleven open
+TODO items, zero implementation) to RUNNABLE-SAMPLE with a real, working script.
 
-## Source Inventory
+## 2. Required Reads
 
-| Source Node | Node Type | Source URL or Path | Human Check |
-|---|---|---|---|
-| Recipe specification | Markdown recipe | `recipes/skill-demand-monitor.md` | Confirm this specification is current and approved before script generation. |
+Read before running or modifying this recipe:
 
-## Inputs
+- `SNICKERDOODLE.md` — the governance contract (verification stack, recipe lifecycle, logging rules).
+- `DOMAIN.md` — this project's index and layout.
+- `recipes/skill-demand-monitor.card.md` — the human card: what this tool can and cannot verify, and its six named failure modes. Read this before trusting any output.
 
-| Input | Type | Source | Required? |
-|---|---|---|---|
-| Job postings | Markdown/CSV/HTML | ATS scan outputs or saved postings | Yes |
-| Company/product sources | Markdown/RSS/API | `[TODO: DATA SOURCE] company docs, engineering blogs, product pages, or release notes` | No |
-| Skill taxonomy | JSON/Markdown | `[TODO: DEFINE] map tools to skill categories and resume labels` | Yes |
+## 3. Phase Gates
 
-## Phase Gates
+Each gate is a hard stop implemented in `scripts/score/skill-demand-monitor.mjs`, not a weighted vote — a closed gate halts the run and emits **no ranked list**, regardless of how much data came before it.
 
-1. Source gate: All required source paths are present or explicitly marked with a typed TODO. Test: `test -f "recipes/skill-demand-monitor.md" && rg -n "\[TODO: DEFINE]" "recipes/skill-demand-monitor.md" || true`. Human capacity: [TO].
-2. Scope gate: The run declares `sample` mode or an approved live mode before ingest begins. Test: `python3 -m json.tool data/raw/skill-demand-monitor/run-envelope.json`. Human capacity: [PF].
-3. Data-shape gate: Every raw and verified JSON output parses before downstream scripts run. Test: `find data/raw/skill-demand-monitor data/verified/skill-demand-monitor -name "*.json" -print -exec python3 -m json.tool {} \;`. Human capacity: [PA].
-4. Script-readiness gate: Every step script exists or is represented by a typed development TODO. Test: `test -f scripts/ingest/skill-demand-monitor-ingest-inputs.py || rg --fixed-strings "[TODO: DEV]" "recipes/skill-demand-monitor.md"`. Human capacity: [IJ].
-5. Approval gate: Live network calls, external writes, credentials, production databases, emails, dashboards, publishing, or model calls with sensitive data require an approval record. Test: `test -f logs/gate-decisions/skill-demand-monitor-approval.json || rg --fixed-strings "[TODO: APPROVE]" "recipes/skill-demand-monitor.md"`. Human capacity: [EI].
-6. Report gate: Agent log and human report are written with the required fields and sections. Test: `test -f logs/skill-demand-monitor-[DATE].json && test -f reports/generated/skill-demand-monitor-[DATE].md`. Human capacity: [TO].
+1. **Schema gate.** Every posting must carry `job_id`, `title`, `company_name`, `source_url`, `description_text`. Records missing any of these are rejected with a named reason (`missing_<field>`) and counted, never silently dropped.
+   *Failure path:* a malformed or empty input file causes `JSON.parse` to throw and the process exits non-zero — the run stops before any output is written.
+2. **Role-filter gate.** If `--role-filter` is given, titles are matched against a small, explicit, inspectable synonym table (`CONFIG.role_filter_synonyms` in the script) — never fuzzy or LLM-based matching.
+   *Failure path:* zero matches → `status: "role_filter_matched_nothing"`, no ranked list. The gate never silently falls back to the unfiltered set.
+3. **Sample-size gate.** Fewer than `--min-sample` (default 20) surviving postings.
+   *Failure path:* `status: "insufficient_sample"` — no ranked list is written, exit code 0 (an honest "skip," not an error). See `skill-demand-monitor.test.mjs` case 1 for the automated proof that this gate actually holds.
+4. **Taxonomy-coverage gate.** If more than 40% of candidate postings match zero taxonomy skills.
+   *Failure path:* the run still ranks (the ranking may be a true empty list), but sets `low_coverage: true` and the Markdown report prints a prominent warning instead of a confident-looking table.
 
-## Steps
+## 4. Primary Stored Tools
 
-1. Step name: Verify provenance. Labor: AI with Human gate.
-   Script called: `scripts/tools/skill-demand-monitor-verify-provenance.py` [TODO: DEV] Define input schema, output schema, transformation logic, and error handling for this script before implementation.
-   Input: declared recipe inputs, prior step outputs, and gate decisions for `skill-demand-monitor`.
-   Output: workflow, source_paths, exists, parsed_ok, approval_state, checked_at.
-   Where output goes: `logs/`
-2. Step name: Ingest declared inputs. Labor: AI with Human gate.
-   Script called: `scripts/ingest/skill-demand-monitor-ingest-inputs.py` [TODO: DEV] Define input schema, output schema, transformation logic, and error handling for this script before implementation.
-   Input: declared recipe inputs, prior step outputs, and gate decisions for `skill-demand-monitor`.
-   Output: records, source_name, source_type, fetched_at, sample_mode, rejects.
-   Where output goes: `data/raw/skill-demand-monitor/`
-3. Step name: Validate data shape. Labor: AI with Human gate.
-   Script called: `scripts/gigo/skill-demand-monitor-validate-data-shape.py` [TODO: DEV] Define input schema, output schema, transformation logic, and error handling for this script before implementation.
-   Input: declared recipe inputs, prior step outputs, and gate decisions for `skill-demand-monitor`.
-   Output: record_count, required_fields_present, missing_fields, parse_errors, schema_version.
-   Where output goes: `data/verified/skill-demand-monitor/`
-4. Step name: Transform and quality check. Labor: AI with Human gate.
-   Script called: `scripts/gigo/skill-demand-monitor-transform-quality-check.py` [TODO: DEV] Define input schema, output schema, transformation logic, and error handling for this script before implementation.
-   Input: declared recipe inputs, prior step outputs, and gate decisions for `skill-demand-monitor`.
-   Output: verified_records, record_count, duplicates, rejects, flags, quality_notes.
-   Where output goes: `data/verified/skill-demand-monitor/`
-5. Step name: Run approved tools. Labor: AI with Human gate.
-   Script called: `scripts/tools/skill-demand-monitor-run-approved-tools.py` [TODO: DEV] Define input schema, output schema, transformation logic, and error handling for this script before implementation.
-   Input: declared recipe inputs, prior step outputs, and gate decisions for `skill-demand-monitor`.
-   Output: tool_name, input_path, output_path, action_taken, approval_id, no_write_mode.
-   Where output goes: `logs/`
-6. Step name: Produce human report. Labor: AI with Human gate.
-   Script called: `scripts/tools/skill-demand-monitor-produce-human-report.py` [TODO: DEV] Define input schema, output schema, transformation logic, and error handling for this script before implementation.
-   Input: declared recipe inputs, prior step outputs, and gate decisions for `skill-demand-monitor`.
-   Output: summary, sources_checked, gate_results, findings, typed_todos, next_decision.
-   Where output goes: `reports/generated/`
+- `scripts/score/skill-demand-monitor.mjs` — the scorer (real, implemented; see Workflow).
+- `scripts/score/skill-demand-monitor.test.mjs` — verification harness (4 gate-behavior / break-attempt cases).
+- `scripts/score/taxonomy/ai-engineering-skills.json` — the versioned, human-curated skill taxonomy the scorer matches against.
+- `scripts/ats/fetch-real-postings.py` — combines this repo's existing Greenhouse/Lever scrapers' output into one file matching this scorer's input schema.
 
-## Output Contract
+## 5. Workflow
+
+1. Obtain a postings file matching the unified job-record schema: the committed
+   example at `data/examples/skill-demand/example-postings.json`, or real data via
+   `npm run fetch-postings -- --greenhouse "Company" --lever "Company" -o private/real-postings/run.json`
+   (uses this repo's own `scripts/ats/scrapers/` — see `scripts/ats/README.md`.
+   Known limitation, found 2026-08-14: the Greenhouse scraper does not currently
+   populate `description_text`, so Greenhouse-sourced postings will be rejected
+   by the schema gate below — see `logs/RUN_LOG.md`).
+2. Run the scorer:
+   ```bash
+   node scripts/score/skill-demand-monitor.mjs data/examples/skill-demand/example-postings.json \
+     --role-filter "ai engineer" --profile data/examples/skill-demand/example-profile.json \
+     --out-dir reports/generated --md reports/generated/skill-demand-demo.md
+   ```
+   This is the exact command that produced the committed
+   `reports/generated/skill-demand-demo.{json,md}` — run it yourself and the
+   output should match (modulo the `generated` date field). Always pass
+   `--out-dir`: without it, the JSON output defaults to landing next to the
+   input file — which, for the example fixture, means it lands inside
+   `data/examples/skill-demand/`, mixed in with the hand-authored fixtures. That
+   is a real rough edge, not a hypothetical one — see `logs/RUN_LOG.md`.
+3. To run against your own real postings and skills instead of the committed
+   example, swap the postings path and swap `--profile` to
+   `private/skills-profile.json` (gitignored — never commit a real profile).
+4. Read the gates section of the Markdown report first. If any gate halted the run, stop — do not re-run with a looser `--min-sample` or a broader filter just to force a ranked list out; that defeats the gate's purpose.
+5. If ranked, read the skill table with its evidence links before acting on it — per the verified-vs-inferred boundary at the bottom of the report.
+
+## 6. Output Contract
 
 ### Agent output
-File: `logs/skill-demand-monitor-[DATE].json`
-Fields: workflow, run_id, mode, steps_completed, records_seen, rejects, duplicates, flags, stop_conditions, todo_items, source_files, gate_decisions, generated_at, raw_output_paths, verified_output_paths, report_path.
+File: `<out-dir>/skill-demand.json` (default: alongside the input file).
+Fields: `_tool, _recipe, generated, config, role_filter, taxonomy, total_postings_ingested, valid_count, rejects, rejects_by_reason, gates, status, candidate_count, zero_hit_rate, low_coverage, skills[]` (each with `id, label, category, posting_count, evidence[], has_evidence?`).
 
 ### Human report
-File: `reports/generated/skill-demand-monitor-[DATE].md`
-Reader: domain lead or human boss responsible for accepting the `skill-demand-monitor -- Tool And Stack Signals For Job Intelligence` run.
-Decision enabled: approve the run for the next phase, request source/schema fixes, or block live execution.
-Sections: run summary, purpose, source inventory, inputs used, phase-gate results, steps completed, records seen, rejects, duplicates, flags, typed TODOs, human approvals, verified findings, inferred findings, decision recommendation.
+File: `<out-dir>/skill-demand.md` (or `--md` path).
+Reader: the student (or any user of this tool) deciding what to study next or how to position an application.
+Sections: a plain-English "In short" headline first; if `--profile` was given and the run ranked, a frequency-sorted "skills you don't have evidence for yet" list; the full ranked skill table with evidence links; the verified-vs-inferred boundary; and the technical gates table (with failure-path detail) last, for anyone who wants to audit the run rather than just read the answer.
 
-## Stop Conditions
+## 7. Verification Checks
 
-- Stop if skill taxonomy is missing.
-- Stop if the report recommends adding skills not supported by student evidence.
-- Stop if job postings are stale or lack URLs.
-- Stop if training recommendations cannot be tied to target roles.
+```bash
+node --check scripts/score/skill-demand-monitor.mjs
+node --check scripts/score/skill-demand-monitor.test.mjs
+node scripts/score/skill-demand-monitor.test.mjs   # 4 cases must pass
+npm run verify                                      # conformance (machine half of P4)
+npm run doctor                                      # environment + privacy-leak check
+```
 
-## Snickerdoodle
+## 8. Logging Rules
 
-### Run Commands
-Full dialogic run:
-`snickerdoodle run skill-demand-monitor --mode dialogic`
+Append a `## YYYY-MM-DD — skill-demand-monitor` entry to `logs/RUN_LOG.md` for every real run against non-trivial data, recording: inputs used, the command run, the gate outcomes, and any open issues (e.g. taxonomy gaps discovered). Never log real personal profile contents — reference `private/skills-profile.json` by path, not by content.
 
-Sample mode (no live network calls, no writes):
-`snickerdoodle run skill-demand-monitor --mode dialogic --sample`
+## 9. Stop Conditions
 
-### Step Commands
-
-| Step | CLI Command | Flags |
-|---|---|---|
-| Verify provenance | `snickerdoodle run skill-demand-monitor --step verify-provenance` | `--sample` `--no-write` |
-| Ingest declared inputs | `snickerdoodle run skill-demand-monitor --step ingest-inputs` | `--sample` |
-| Validate data shape | `snickerdoodle run skill-demand-monitor --step validate-data-shape` | `--sample` |
-| Transform and quality check | `snickerdoodle run skill-demand-monitor --step transform-quality-check` | `--sample` |
-| Run approved tools | `snickerdoodle run skill-demand-monitor --step run-approved-tools` | `--sample` `--no-write` |
-| Produce human report | `snickerdoodle run skill-demand-monitor --step produce-human-report` | `--sample` `--no-write` |
-
-### Gate Commands
-
-| Gate | CLI Command |
-|---|---|
-| Gate 1 - Source gate | `snickerdoodle gate skill-demand-monitor --gate 1 --decision approve --note "Sources checked"` |
-| Gate 2 - Scope gate | `snickerdoodle gate skill-demand-monitor --gate 2 --decision approve --note "Scope and mode approved"` |
-| Gate 3 - Data-shape gate | `snickerdoodle gate skill-demand-monitor --gate 3 --decision approve --note "Outputs parse"` |
-| Gate 4 - Script-readiness gate | `snickerdoodle gate skill-demand-monitor --gate 4 --decision approve --note "Scripts ready or TODO DEV accepted"` |
-| Gate 5 - Approval gate | `snickerdoodle gate skill-demand-monitor --gate 5 --decision approve --note "Live or sensitive actions approved"` |
-| Gate 6 - Report gate | `snickerdoodle gate skill-demand-monitor --gate 6 --decision approve --note "Report and log complete"` |
-
-### Script Locations
-
-| Step | Script Path | Layer |
-|---|---|---|
-| Verify provenance | `scripts/tools/skill-demand-monitor-verify-provenance.py` | tools |
-| Ingest declared inputs | `scripts/ingest/skill-demand-monitor-ingest-inputs.py` | ingest |
-| Validate data shape | `scripts/gigo/skill-demand-monitor-validate-data-shape.py` | gigo |
-| Transform and quality check | `scripts/gigo/skill-demand-monitor-transform-quality-check.py` | gigo |
-| Run approved tools | `scripts/tools/skill-demand-monitor-run-approved-tools.py` | tools |
-| Produce human report | `scripts/tools/skill-demand-monitor-produce-human-report.py` | tools |
-
-### Output Locations
-
-| Output | Path | Format |
-|---|---|---|
-| Raw ingest | `data/raw/skill-demand-monitor/` | JSON |
-| Verified data | `data/verified/skill-demand-monitor/` | JSON |
-| Agent log | `logs/skill-demand-monitor-[DATE].json` | JSON |
-| Human report | `reports/generated/skill-demand-monitor-[DATE].md` | Markdown |
-| Gate decisions | `logs/gate-decisions/` | JSON |
-
-## Provenance
-
-| Source | Verification command | Notes |
-|---|---|---|
-| `data/ats/applications.md` | `test -f "data/ats/applications.md"` | Referenced source/evidence path from prior recipe text. |
-| `recipes/apply.md` | `test -f "recipes/apply.md"` | Referenced source/evidence path from prior recipe text. |
-| `recipes/interview-prep.md` | `test -f "recipes/interview-prep.md"` | Referenced source/evidence path from prior recipe text. |
-| `recipes/training.md` | `test -f "recipes/training.md"` | Referenced source/evidence path from prior recipe text. |
-
-## Existing Recipe Notes Preserved For Implementation
-
-### Workflow
-
-1. Extract tools, platforms, frameworks, and certifications from job postings.
-2. Optionally enrich with company docs and product pages.
-3. Normalize mentions into skill category, tool name, evidence source, and count.
-4. Compare extracted skills against the student's profile.
-5. Produce resume keyword suggestions and training priorities.
-6. Human approves which skills move to resume, project, or training work.
+- Stop if the input file is not valid JSON, or contains no `postings`/array data.
+- Stop (do not force a ranking) if the role-filter gate matches zero postings.
+- Stop (do not force a ranking) if fewer than `--min-sample` postings survive gates 1–2.
+- Do not report a "priority to learn" ordering — this script reports frequency and evidence-gap only; prioritization is a human judgment this recipe deliberately does not make.

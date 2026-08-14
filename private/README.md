@@ -11,6 +11,13 @@ Nothing you put here will be committed or pushed. This repo is public; that matt
 - `resume.md` / `resume.pdf` — your real CV (the `resumes/` folder at the repo root
   holds *fictional examples* — Aarav, Maya, Priya, Rohan — keep your real one here).
 - your real application tracker, recruiter notes, offer details, anything with PII.
+- `skills-profile.json` — a flat JSON array of skill labels you have real
+  evidence for, used by `npm run skill-demand -- <postings.json> --profile
+  private/skills-profile.json` (`recipes/skill-demand-monitor.md`). Same shape
+  as the committed example at `data/examples/skill-demand/example-profile.json`.
+- `real-postings/*.json` — real postings pulled via `npm run fetch-postings`
+  (see `scripts/ats/README.md`). Real, live company data — never committed,
+  even though the postings themselves are public.
 
 ## How AI uses it
 

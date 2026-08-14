@@ -150,3 +150,112 @@ private emails, or sensitive application notes.
 - **Rebuilt:** `node scripts/build-instructions.mjs --promote` → `AGENTS.md` + `CLAUDE.md` regenerated; `CLAUDE.md` now imports `@SNICKERDOODLE.md`.
 - **Untouched:** `data/` CSVs (real company names containing "mycroft") and prior RUN_LOG history (append-only).
 - **Result:** conformance + doctor green; no stale `MYCROFT.md` outside data/history.
+
+## 2026-08-14 — Repo-location correction: capstone contribution ported here from a standalone repo
+
+- **By:** Aditi Bailur
+
+Earlier work on the capstone's `skill-demand-monitor` contribution (promoting
+`recipes/skill-demand-monitor.md` from DRAFT to RUNNABLE) was built and
+tested in a separate, unrelated repo (`github.com/aditibailur/skill-demand-monitor`),
+based on a miscommunication about an instructor directive. On re-reading the
+assignment's Step 5 ("Fork the repo; branch `contrib/<name>-<component>`"),
+the mismatch was caught — the contribution needed to live in this actual
+fork, not a new one. Everything already built and verified there (script,
+tests, taxonomy, recipe, card, attestation docs) was ported into this repo
+on branch `contrib/skill-demand-monitor-scorer`, adapted where the two
+repos' layouts differ (most notably: this repo already has the real
+Greenhouse/Lever scrapers, so no scraper code needed to be duplicated here
+at all — `scripts/ats/fetch-real-postings.py` calls the real, local
+`scrapers` package directly).
+
+**While porting, `npm run doctor` surfaced two real, pre-existing privacy
+issues on `main`, unrelated to this contribution** — fixed as their own
+commits, not mixed into this branch's diff: `search/resume.json`,
+`search/profile.yml`, and `search/gaps.md` were tracked real personal data
+from an earlier assignment (`97c3781`); a RUN_LOG entry from that same
+assignment had a real former employer name, a real project name, and a
+specific estimated visa date written into prose, which is harder to fix than
+an untracked file since RUN_LOG is meant to be append-only history —
+redacted in place with a disclosure note rather than silently rewritten
+(`95d347e`).
+
+## 2026-08-14 — skill-demand-monitor promoted DRAFT → RUNNABLE-SAMPLE
+
+- **Recipe:** `recipes/skill-demand-monitor.md` v1.0.0
+- **By:** Aditi Bailur
+
+### Steps completed
+- [x] Wrote `scripts/score/taxonomy/ai-engineering-skills.json` — 36 skills, 63 patterns, human-curated, versioned.
+- [x] Wrote `scripts/score/skill-demand-monitor.mjs` — 4 phase gates (schema, role-filter, sample-size, taxonomy-coverage), JSON + Markdown output, zero network calls.
+- [x] Wrote `scripts/score/skill-demand-monitor.test.mjs` — 4 black-box verification cases against the real CLI.
+- [x] Wrote `data/examples/skill-demand/example-postings.json` (28 synthetic postings, 22 designed to match an "ai engineer" role filter) and `example-profile.json`.
+- [x] Rewrote `recipes/skill-demand-monitor.md` (9 required sections, real verbatim commands) and wrote `recipes/skill-demand-monitor.card.md` (6 failure modes).
+- [x] Wrote `scripts/ats/fetch-real-postings.py`, combining this repo's existing Greenhouse/Lever scrapers' output into one file matching the scorer's schema.
+- [x] Wrote `docs/skill-demand-monitor-verified-vs-inferred.md` and `docs/skill-demand-monitor-ethics-gate.md` (prefixed to distinguish from this repo's engine-wide docs).
+- [x] Fixed a real bug caught during testing: the Markdown report printed a false `pass (2 ≥ 20)` in the gates table, and an unconditional "enough data to trust this ranking" headline, even when `--min-sample` had been manually overridden below the tool's own default — see the honest-run entry below.
+
+### Commands run (real, against real data)
+
+```
+npm run skill-demand:test
+npm run skill-demand -- data/examples/skill-demand/example-postings.json \
+  --role-filter "ai engineer" --profile data/examples/skill-demand/example-profile.json \
+  --out-dir reports/generated --md reports/generated/skill-demand-demo.md
+npm run verify
+npm run doctor
+```
+
+### Output
+- `reports/generated/skill-demand-demo.{json,md}` — real run: 28 postings ingested → 28 valid (0 rejects) → 22 candidates after the "ai engineer" role filter → **ranked**, 21 skills found, `low_coverage: false`. Top result: Python, 22/22 postings (100%).
+- `npm run skill-demand:test` — 4/4 cases pass.
+- `npm run verify` — conforms (131 files at time of this port, including this contribution's new files).
+- `npm run doctor` — environment runnable, no private/PII paths tracked (after the fixes above).
+
+### Verified signals
+- Every skill count in the demo output traces to specific `job_id`s in `example-postings.json`.
+- The role-filter gate correctly excludes "Machine Learning Engineer" postings — confirms the tool distinguishes "AI Engineer" from the broader "ML Engineering" category, per the original design intent.
+- Gate boundary is inclusive with no off-by-one: `--min-sample 22` (== candidate count) passes; `--min-sample 23` halts.
+
+### What the machine could not know
+- Whether a mentioned skill is actually required to do the job, or padding in the posting text.
+- Whether the 36-skill taxonomy is adequate outside AI/ML engineering, or has gone stale for AI/ML engineering itself since its `_last_updated` date.
+- Which of the ranked skills is worth a given person's limited study time — left to the human reading the report.
+
+## 2026-08-14 — First real run against live postings; a real bug found and fixed
+
+- **By:** Aditi Bailur
+
+### Commands run (real, against real network calls)
+
+```
+cd scripts/ats
+python3 fetch-real-postings.py --greenhouse "Anthropic" "Databricks" --lever "Palantir" \
+  -o ../../private/real-postings/2026-08-14-combined.json
+cd ../..
+node scripts/score/skill-demand-monitor.mjs private/real-postings/2026-08-14-combined.json \
+  --out-dir reports/generated --md reports/generated/real-run-1-unfiltered.md
+node scripts/score/skill-demand-monitor.mjs private/real-postings/2026-08-14-combined.json \
+  --role-filter "ai engineer" --out-dir reports/generated --md reports/generated/real-run-2-ai-engineer-halted.md
+```
+
+### Output (real numbers)
+- **1,702 real postings ingested** from Anthropic (424), Databricks (800), Scale AI (213, via Greenhouse), and Palantir (265, via Lever).
+- **Schema gate: 265 valid, 1,437 rejected**, all `missing_description_text` — the Greenhouse scraper's `normalize_job()` hardcodes that field to empty regardless of the API response, a limitation of that scraper (documented in `scripts/ats/README.md`), not of this contribution. Only Lever-sourced data was usable.
+- **Unfiltered run:** 265 candidates, ranked, `low_coverage: true` (72% zero-hit — Palantir's real postings skew infrastructure/defense, not AI-application work this taxonomy targets). Top real skill: Kubernetes, 20/265 (8%).
+- **`--role-filter "ai engineer"`:** only 2 real matches (both "Forward Deployed AI Engineer") → `insufficient_sample`, correctly halted.
+
+### Plausibility audit
+Palantir's real job board is dominated by backend/infrastructure/defense-sector engineering roles, not foundation-model application work, so a low match rate against an AI-engineering-specific taxonomy (72% zero-hit) is exactly what you'd expect — not a sign the tool is broken.
+
+### Deliberate break attempt — found and fixed a real bug
+Tried to force a ranking out of the 2 real "ai engineer" postings via `--min-sample 2`. The "In short" headline said, verbatim: **"2 of 1702 postings matched 'ai engineer' — enough data to trust this ranking."** — unconditional, regardless of the gutted floor. The gates table printed **`pass (2 ≥ 20)`** — mathematically false, since it displayed the hardcoded default instead of the value actually used.
+
+**Fixed** in `scripts/score/skill-demand-monitor.mjs`: the real `--min-sample` value is threaded through as `result.min_sample_used` and referenced everywhere instead of `CONFIG.min_sample`; the headline no longer claims "enough data to trust"; a new `min_sample_overridden_below_default` flag prints an explicit caution. Re-ran the break attempt after the fix: gates table now correctly reads `pass (2 ≥ 2)`, with a loud caution about the override. All 4 verification cases still pass.
+
+### What the machine could not know
+- Why the Greenhouse scraper never populates `description_text` — the schema gate detected *that* records were unusable, not *why*; diagnosing that required reading the scraper's source.
+- Whether Palantir's 72% zero-hit rate reflects a genuinely mismatched taxonomy, or true AI-engineering postings worded in ways this taxonomy doesn't catch.
+
+### Open issues
+- A company with more real "AI Engineer"-titled postings would make a more compelling ranked-list demo than the current mostly-halted/broad results.

@@ -90,7 +90,10 @@ function frontmatter(txt) {
 }
 
 const recipes = fs.readdirSync('recipes')
-  .filter((f) => f.endsWith('.md') && f !== 'README.md' && !f.includes('.template.'));
+  // .card.md files are the human half of a recipe/card pair (SNICKERDOODLE P5) —
+  // they carry no AI-recipe lifecycle frontmatter by design and are exempt here,
+  // same as README.md and *.template.* already were.
+  .filter((f) => f.endsWith('.md') && f !== 'README.md' && !f.includes('.template.') && !f.endsWith('.card.md'));
 const byStatus = {}; let withFm = 0, declaredTodos = 0, bodyTodos = 0;
 const missing = [], mismatched = [];
 for (const f of recipes) {

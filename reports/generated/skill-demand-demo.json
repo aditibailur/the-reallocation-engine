@@ -1,0 +1,855 @@
+{
+  "_tool": "skill-demand-monitor",
+  "_recipe": "recipes/skill-demand-monitor.md",
+  "generated": "2026-08-14",
+  "config": {
+    "min_sample": 20,
+    "coverage_floor": 0.4
+  },
+  "role_filter": "ai engineer",
+  "taxonomy": "ai-engineering-skills@0.1.0",
+  "total_postings_ingested": 28,
+  "valid_count": 28,
+  "rejects": [],
+  "rejects_by_reason": {},
+  "min_sample_used": 20,
+  "min_sample_overridden_below_default": false,
+  "gates": {
+    "role_filter": {
+      "filter_applied": true,
+      "synonyms": [
+        "ai engineer",
+        "genai engineer",
+        "llm engineer"
+      ],
+      "matched_count": 22
+    }
+  },
+  "status": "ranked",
+  "candidate_count": 22,
+  "zero_hit_rate": 0,
+  "low_coverage": false,
+  "skills": [
+    {
+      "id": "python",
+      "label": "Python",
+      "category": "language",
+      "posting_count": 22,
+      "evidence": [
+        {
+          "job_id": "sd-001",
+          "source_url": "https://example.invalid/northwind/jobs/sd-001"
+        },
+        {
+          "job_id": "sd-002",
+          "source_url": "https://example.invalid/cascade/jobs/sd-002"
+        },
+        {
+          "job_id": "sd-003",
+          "source_url": "https://example.invalid/bluepeak/jobs/sd-003"
+        },
+        {
+          "job_id": "sd-004",
+          "source_url": "https://example.invalid/rivergate/jobs/sd-004"
+        },
+        {
+          "job_id": "sd-005",
+          "source_url": "https://example.invalid/amberline/jobs/sd-005"
+        },
+        {
+          "job_id": "sd-006",
+          "source_url": "https://example.invalid/palisade/jobs/sd-006"
+        },
+        {
+          "job_id": "sd-007",
+          "source_url": "https://example.invalid/fernbrook/jobs/sd-007"
+        },
+        {
+          "job_id": "sd-008",
+          "source_url": "https://example.invalid/marrow/jobs/sd-008"
+        },
+        {
+          "job_id": "sd-009",
+          "source_url": "https://example.invalid/thistlewood/jobs/sd-009"
+        },
+        {
+          "job_id": "sd-010",
+          "source_url": "https://example.invalid/halcyon/jobs/sd-010"
+        },
+        {
+          "job_id": "sd-011",
+          "source_url": "https://example.invalid/copperfield/jobs/sd-011"
+        },
+        {
+          "job_id": "sd-012",
+          "source_url": "https://example.invalid/windmere/jobs/sd-012"
+        },
+        {
+          "job_id": "sd-013",
+          "source_url": "https://example.invalid/stonebridge/jobs/sd-013"
+        },
+        {
+          "job_id": "sd-014",
+          "source_url": "https://example.invalid/ashgrove/jobs/sd-014"
+        },
+        {
+          "job_id": "sd-015",
+          "source_url": "https://example.invalid/larkspur/jobs/sd-015"
+        },
+        {
+          "job_id": "sd-016",
+          "source_url": "https://example.invalid/thornfield/jobs/sd-016"
+        },
+        {
+          "job_id": "sd-017",
+          "source_url": "https://example.invalid/gladwell/jobs/sd-017"
+        },
+        {
+          "job_id": "sd-018",
+          "source_url": "https://example.invalid/redshaw/jobs/sd-018"
+        },
+        {
+          "job_id": "sd-019",
+          "source_url": "https://example.invalid/ironwood/jobs/sd-019"
+        },
+        {
+          "job_id": "sd-020",
+          "source_url": "https://example.invalid/millbrook/jobs/sd-020"
+        },
+        {
+          "job_id": "sd-021",
+          "source_url": "https://example.invalid/cinderpoint/jobs/sd-021"
+        },
+        {
+          "job_id": "sd-022",
+          "source_url": "https://example.invalid/oakhaven/jobs/sd-022"
+        }
+      ],
+      "has_evidence": true
+    },
+    {
+      "id": "aws",
+      "label": "AWS",
+      "category": "cloud",
+      "posting_count": 14,
+      "evidence": [
+        {
+          "job_id": "sd-001",
+          "source_url": "https://example.invalid/northwind/jobs/sd-001"
+        },
+        {
+          "job_id": "sd-003",
+          "source_url": "https://example.invalid/bluepeak/jobs/sd-003"
+        },
+        {
+          "job_id": "sd-004",
+          "source_url": "https://example.invalid/rivergate/jobs/sd-004"
+        },
+        {
+          "job_id": "sd-006",
+          "source_url": "https://example.invalid/palisade/jobs/sd-006"
+        },
+        {
+          "job_id": "sd-008",
+          "source_url": "https://example.invalid/marrow/jobs/sd-008"
+        },
+        {
+          "job_id": "sd-009",
+          "source_url": "https://example.invalid/thistlewood/jobs/sd-009"
+        },
+        {
+          "job_id": "sd-011",
+          "source_url": "https://example.invalid/copperfield/jobs/sd-011"
+        },
+        {
+          "job_id": "sd-012",
+          "source_url": "https://example.invalid/windmere/jobs/sd-012"
+        },
+        {
+          "job_id": "sd-014",
+          "source_url": "https://example.invalid/ashgrove/jobs/sd-014"
+        },
+        {
+          "job_id": "sd-015",
+          "source_url": "https://example.invalid/larkspur/jobs/sd-015"
+        },
+        {
+          "job_id": "sd-017",
+          "source_url": "https://example.invalid/gladwell/jobs/sd-017"
+        },
+        {
+          "job_id": "sd-019",
+          "source_url": "https://example.invalid/ironwood/jobs/sd-019"
+        },
+        {
+          "job_id": "sd-020",
+          "source_url": "https://example.invalid/millbrook/jobs/sd-020"
+        },
+        {
+          "job_id": "sd-022",
+          "source_url": "https://example.invalid/oakhaven/jobs/sd-022"
+        }
+      ],
+      "has_evidence": true
+    },
+    {
+      "id": "docker",
+      "label": "Docker",
+      "category": "infra",
+      "posting_count": 14,
+      "evidence": [
+        {
+          "job_id": "sd-001",
+          "source_url": "https://example.invalid/northwind/jobs/sd-001"
+        },
+        {
+          "job_id": "sd-003",
+          "source_url": "https://example.invalid/bluepeak/jobs/sd-003"
+        },
+        {
+          "job_id": "sd-005",
+          "source_url": "https://example.invalid/amberline/jobs/sd-005"
+        },
+        {
+          "job_id": "sd-007",
+          "source_url": "https://example.invalid/fernbrook/jobs/sd-007"
+        },
+        {
+          "job_id": "sd-009",
+          "source_url": "https://example.invalid/thistlewood/jobs/sd-009"
+        },
+        {
+          "job_id": "sd-011",
+          "source_url": "https://example.invalid/copperfield/jobs/sd-011"
+        },
+        {
+          "job_id": "sd-012",
+          "source_url": "https://example.invalid/windmere/jobs/sd-012"
+        },
+        {
+          "job_id": "sd-014",
+          "source_url": "https://example.invalid/ashgrove/jobs/sd-014"
+        },
+        {
+          "job_id": "sd-016",
+          "source_url": "https://example.invalid/thornfield/jobs/sd-016"
+        },
+        {
+          "job_id": "sd-017",
+          "source_url": "https://example.invalid/gladwell/jobs/sd-017"
+        },
+        {
+          "job_id": "sd-019",
+          "source_url": "https://example.invalid/ironwood/jobs/sd-019"
+        },
+        {
+          "job_id": "sd-020",
+          "source_url": "https://example.invalid/millbrook/jobs/sd-020"
+        },
+        {
+          "job_id": "sd-021",
+          "source_url": "https://example.invalid/cinderpoint/jobs/sd-021"
+        },
+        {
+          "job_id": "sd-022",
+          "source_url": "https://example.invalid/oakhaven/jobs/sd-022"
+        }
+      ],
+      "has_evidence": true
+    },
+    {
+      "id": "openai_api",
+      "label": "OpenAI API",
+      "category": "llm_provider",
+      "posting_count": 11,
+      "evidence": [
+        {
+          "job_id": "sd-001",
+          "source_url": "https://example.invalid/northwind/jobs/sd-001"
+        },
+        {
+          "job_id": "sd-003",
+          "source_url": "https://example.invalid/bluepeak/jobs/sd-003"
+        },
+        {
+          "job_id": "sd-005",
+          "source_url": "https://example.invalid/amberline/jobs/sd-005"
+        },
+        {
+          "job_id": "sd-006",
+          "source_url": "https://example.invalid/palisade/jobs/sd-006"
+        },
+        {
+          "job_id": "sd-008",
+          "source_url": "https://example.invalid/marrow/jobs/sd-008"
+        },
+        {
+          "job_id": "sd-011",
+          "source_url": "https://example.invalid/copperfield/jobs/sd-011"
+        },
+        {
+          "job_id": "sd-013",
+          "source_url": "https://example.invalid/stonebridge/jobs/sd-013"
+        },
+        {
+          "job_id": "sd-015",
+          "source_url": "https://example.invalid/larkspur/jobs/sd-015"
+        },
+        {
+          "job_id": "sd-016",
+          "source_url": "https://example.invalid/thornfield/jobs/sd-016"
+        },
+        {
+          "job_id": "sd-019",
+          "source_url": "https://example.invalid/ironwood/jobs/sd-019"
+        },
+        {
+          "job_id": "sd-020",
+          "source_url": "https://example.invalid/millbrook/jobs/sd-020"
+        }
+      ],
+      "has_evidence": false
+    },
+    {
+      "id": "prompt_engineering",
+      "label": "Prompt engineering",
+      "category": "llm_tooling",
+      "posting_count": 10,
+      "evidence": [
+        {
+          "job_id": "sd-001",
+          "source_url": "https://example.invalid/northwind/jobs/sd-001"
+        },
+        {
+          "job_id": "sd-004",
+          "source_url": "https://example.invalid/rivergate/jobs/sd-004"
+        },
+        {
+          "job_id": "sd-006",
+          "source_url": "https://example.invalid/palisade/jobs/sd-006"
+        },
+        {
+          "job_id": "sd-008",
+          "source_url": "https://example.invalid/marrow/jobs/sd-008"
+        },
+        {
+          "job_id": "sd-011",
+          "source_url": "https://example.invalid/copperfield/jobs/sd-011"
+        },
+        {
+          "job_id": "sd-013",
+          "source_url": "https://example.invalid/stonebridge/jobs/sd-013"
+        },
+        {
+          "job_id": "sd-015",
+          "source_url": "https://example.invalid/larkspur/jobs/sd-015"
+        },
+        {
+          "job_id": "sd-019",
+          "source_url": "https://example.invalid/ironwood/jobs/sd-019"
+        },
+        {
+          "job_id": "sd-020",
+          "source_url": "https://example.invalid/millbrook/jobs/sd-020"
+        },
+        {
+          "job_id": "sd-021",
+          "source_url": "https://example.invalid/cinderpoint/jobs/sd-021"
+        }
+      ],
+      "has_evidence": false
+    },
+    {
+      "id": "vector_database",
+      "label": "Vector database",
+      "category": "data_infra",
+      "posting_count": 10,
+      "evidence": [
+        {
+          "job_id": "sd-001",
+          "source_url": "https://example.invalid/northwind/jobs/sd-001"
+        },
+        {
+          "job_id": "sd-003",
+          "source_url": "https://example.invalid/bluepeak/jobs/sd-003"
+        },
+        {
+          "job_id": "sd-005",
+          "source_url": "https://example.invalid/amberline/jobs/sd-005"
+        },
+        {
+          "job_id": "sd-007",
+          "source_url": "https://example.invalid/fernbrook/jobs/sd-007"
+        },
+        {
+          "job_id": "sd-009",
+          "source_url": "https://example.invalid/thistlewood/jobs/sd-009"
+        },
+        {
+          "job_id": "sd-012",
+          "source_url": "https://example.invalid/windmere/jobs/sd-012"
+        },
+        {
+          "job_id": "sd-014",
+          "source_url": "https://example.invalid/ashgrove/jobs/sd-014"
+        },
+        {
+          "job_id": "sd-017",
+          "source_url": "https://example.invalid/gladwell/jobs/sd-017"
+        },
+        {
+          "job_id": "sd-019",
+          "source_url": "https://example.invalid/ironwood/jobs/sd-019"
+        },
+        {
+          "job_id": "sd-022",
+          "source_url": "https://example.invalid/oakhaven/jobs/sd-022"
+        }
+      ],
+      "has_evidence": false
+    },
+    {
+      "id": "langchain",
+      "label": "LangChain",
+      "category": "llm_tooling",
+      "posting_count": 9,
+      "evidence": [
+        {
+          "job_id": "sd-001",
+          "source_url": "https://example.invalid/northwind/jobs/sd-001"
+        },
+        {
+          "job_id": "sd-003",
+          "source_url": "https://example.invalid/bluepeak/jobs/sd-003"
+        },
+        {
+          "job_id": "sd-007",
+          "source_url": "https://example.invalid/fernbrook/jobs/sd-007"
+        },
+        {
+          "job_id": "sd-010",
+          "source_url": "https://example.invalid/halcyon/jobs/sd-010"
+        },
+        {
+          "job_id": "sd-012",
+          "source_url": "https://example.invalid/windmere/jobs/sd-012"
+        },
+        {
+          "job_id": "sd-015",
+          "source_url": "https://example.invalid/larkspur/jobs/sd-015"
+        },
+        {
+          "job_id": "sd-017",
+          "source_url": "https://example.invalid/gladwell/jobs/sd-017"
+        },
+        {
+          "job_id": "sd-020",
+          "source_url": "https://example.invalid/millbrook/jobs/sd-020"
+        },
+        {
+          "job_id": "sd-022",
+          "source_url": "https://example.invalid/oakhaven/jobs/sd-022"
+        }
+      ],
+      "has_evidence": false
+    },
+    {
+      "id": "embeddings",
+      "label": "Embeddings",
+      "category": "llm_tooling",
+      "posting_count": 8,
+      "evidence": [
+        {
+          "job_id": "sd-002",
+          "source_url": "https://example.invalid/cascade/jobs/sd-002"
+        },
+        {
+          "job_id": "sd-005",
+          "source_url": "https://example.invalid/amberline/jobs/sd-005"
+        },
+        {
+          "job_id": "sd-009",
+          "source_url": "https://example.invalid/thistlewood/jobs/sd-009"
+        },
+        {
+          "job_id": "sd-012",
+          "source_url": "https://example.invalid/windmere/jobs/sd-012"
+        },
+        {
+          "job_id": "sd-015",
+          "source_url": "https://example.invalid/larkspur/jobs/sd-015"
+        },
+        {
+          "job_id": "sd-017",
+          "source_url": "https://example.invalid/gladwell/jobs/sd-017"
+        },
+        {
+          "job_id": "sd-019",
+          "source_url": "https://example.invalid/ironwood/jobs/sd-019"
+        },
+        {
+          "job_id": "sd-022",
+          "source_url": "https://example.invalid/oakhaven/jobs/sd-022"
+        }
+      ],
+      "has_evidence": false
+    },
+    {
+      "id": "kubernetes",
+      "label": "Kubernetes",
+      "category": "infra",
+      "posting_count": 8,
+      "evidence": [
+        {
+          "job_id": "sd-002",
+          "source_url": "https://example.invalid/cascade/jobs/sd-002"
+        },
+        {
+          "job_id": "sd-005",
+          "source_url": "https://example.invalid/amberline/jobs/sd-005"
+        },
+        {
+          "job_id": "sd-007",
+          "source_url": "https://example.invalid/fernbrook/jobs/sd-007"
+        },
+        {
+          "job_id": "sd-010",
+          "source_url": "https://example.invalid/halcyon/jobs/sd-010"
+        },
+        {
+          "job_id": "sd-012",
+          "source_url": "https://example.invalid/windmere/jobs/sd-012"
+        },
+        {
+          "job_id": "sd-015",
+          "source_url": "https://example.invalid/larkspur/jobs/sd-015"
+        },
+        {
+          "job_id": "sd-018",
+          "source_url": "https://example.invalid/redshaw/jobs/sd-018"
+        },
+        {
+          "job_id": "sd-021",
+          "source_url": "https://example.invalid/cinderpoint/jobs/sd-021"
+        }
+      ],
+      "has_evidence": false
+    },
+    {
+      "id": "pytorch",
+      "label": "PyTorch",
+      "category": "ml_framework",
+      "posting_count": 8,
+      "evidence": [
+        {
+          "job_id": "sd-002",
+          "source_url": "https://example.invalid/cascade/jobs/sd-002"
+        },
+        {
+          "job_id": "sd-004",
+          "source_url": "https://example.invalid/rivergate/jobs/sd-004"
+        },
+        {
+          "job_id": "sd-007",
+          "source_url": "https://example.invalid/fernbrook/jobs/sd-007"
+        },
+        {
+          "job_id": "sd-010",
+          "source_url": "https://example.invalid/halcyon/jobs/sd-010"
+        },
+        {
+          "job_id": "sd-014",
+          "source_url": "https://example.invalid/ashgrove/jobs/sd-014"
+        },
+        {
+          "job_id": "sd-016",
+          "source_url": "https://example.invalid/thornfield/jobs/sd-016"
+        },
+        {
+          "job_id": "sd-018",
+          "source_url": "https://example.invalid/redshaw/jobs/sd-018"
+        },
+        {
+          "job_id": "sd-021",
+          "source_url": "https://example.invalid/cinderpoint/jobs/sd-021"
+        }
+      ],
+      "has_evidence": false
+    },
+    {
+      "id": "rag",
+      "label": "Retrieval-Augmented Generation (RAG)",
+      "category": "llm_tooling",
+      "posting_count": 8,
+      "evidence": [
+        {
+          "job_id": "sd-001",
+          "source_url": "https://example.invalid/northwind/jobs/sd-001"
+        },
+        {
+          "job_id": "sd-003",
+          "source_url": "https://example.invalid/bluepeak/jobs/sd-003"
+        },
+        {
+          "job_id": "sd-006",
+          "source_url": "https://example.invalid/palisade/jobs/sd-006"
+        },
+        {
+          "job_id": "sd-009",
+          "source_url": "https://example.invalid/thistlewood/jobs/sd-009"
+        },
+        {
+          "job_id": "sd-012",
+          "source_url": "https://example.invalid/windmere/jobs/sd-012"
+        },
+        {
+          "job_id": "sd-014",
+          "source_url": "https://example.invalid/ashgrove/jobs/sd-014"
+        },
+        {
+          "job_id": "sd-017",
+          "source_url": "https://example.invalid/gladwell/jobs/sd-017"
+        },
+        {
+          "job_id": "sd-022",
+          "source_url": "https://example.invalid/oakhaven/jobs/sd-022"
+        }
+      ],
+      "has_evidence": false
+    },
+    {
+      "id": "fine_tuning",
+      "label": "Fine-tuning",
+      "category": "llm_tooling",
+      "posting_count": 7,
+      "evidence": [
+        {
+          "job_id": "sd-002",
+          "source_url": "https://example.invalid/cascade/jobs/sd-002"
+        },
+        {
+          "job_id": "sd-004",
+          "source_url": "https://example.invalid/rivergate/jobs/sd-004"
+        },
+        {
+          "job_id": "sd-009",
+          "source_url": "https://example.invalid/thistlewood/jobs/sd-009"
+        },
+        {
+          "job_id": "sd-010",
+          "source_url": "https://example.invalid/halcyon/jobs/sd-010"
+        },
+        {
+          "job_id": "sd-013",
+          "source_url": "https://example.invalid/stonebridge/jobs/sd-013"
+        },
+        {
+          "job_id": "sd-018",
+          "source_url": "https://example.invalid/redshaw/jobs/sd-018"
+        },
+        {
+          "job_id": "sd-021",
+          "source_url": "https://example.invalid/cinderpoint/jobs/sd-021"
+        }
+      ],
+      "has_evidence": false
+    },
+    {
+      "id": "agentic_ai",
+      "label": "Agentic / AI agents",
+      "category": "llm_tooling",
+      "posting_count": 6,
+      "evidence": [
+        {
+          "job_id": "sd-002",
+          "source_url": "https://example.invalid/cascade/jobs/sd-002"
+        },
+        {
+          "job_id": "sd-004",
+          "source_url": "https://example.invalid/rivergate/jobs/sd-004"
+        },
+        {
+          "job_id": "sd-008",
+          "source_url": "https://example.invalid/marrow/jobs/sd-008"
+        },
+        {
+          "job_id": "sd-011",
+          "source_url": "https://example.invalid/copperfield/jobs/sd-011"
+        },
+        {
+          "job_id": "sd-015",
+          "source_url": "https://example.invalid/larkspur/jobs/sd-015"
+        },
+        {
+          "job_id": "sd-020",
+          "source_url": "https://example.invalid/millbrook/jobs/sd-020"
+        }
+      ],
+      "has_evidence": false
+    },
+    {
+      "id": "llm_evals",
+      "label": "LLM evaluation / eval harnesses",
+      "category": "llm_tooling",
+      "posting_count": 6,
+      "evidence": [
+        {
+          "job_id": "sd-002",
+          "source_url": "https://example.invalid/cascade/jobs/sd-002"
+        },
+        {
+          "job_id": "sd-003",
+          "source_url": "https://example.invalid/bluepeak/jobs/sd-003"
+        },
+        {
+          "job_id": "sd-006",
+          "source_url": "https://example.invalid/palisade/jobs/sd-006"
+        },
+        {
+          "job_id": "sd-010",
+          "source_url": "https://example.invalid/halcyon/jobs/sd-010"
+        },
+        {
+          "job_id": "sd-013",
+          "source_url": "https://example.invalid/stonebridge/jobs/sd-013"
+        },
+        {
+          "job_id": "sd-018",
+          "source_url": "https://example.invalid/redshaw/jobs/sd-018"
+        }
+      ],
+      "has_evidence": false
+    },
+    {
+      "id": "anthropic_api",
+      "label": "Anthropic / Claude API",
+      "category": "llm_provider",
+      "posting_count": 5,
+      "evidence": [
+        {
+          "job_id": "sd-001",
+          "source_url": "https://example.invalid/northwind/jobs/sd-001"
+        },
+        {
+          "job_id": "sd-005",
+          "source_url": "https://example.invalid/amberline/jobs/sd-005"
+        },
+        {
+          "job_id": "sd-008",
+          "source_url": "https://example.invalid/marrow/jobs/sd-008"
+        },
+        {
+          "job_id": "sd-014",
+          "source_url": "https://example.invalid/ashgrove/jobs/sd-014"
+        },
+        {
+          "job_id": "sd-021",
+          "source_url": "https://example.invalid/cinderpoint/jobs/sd-021"
+        }
+      ],
+      "has_evidence": false
+    },
+    {
+      "id": "transformers",
+      "label": "Transformers",
+      "category": "ml_framework",
+      "posting_count": 5,
+      "evidence": [
+        {
+          "job_id": "sd-002",
+          "source_url": "https://example.invalid/cascade/jobs/sd-002"
+        },
+        {
+          "job_id": "sd-006",
+          "source_url": "https://example.invalid/palisade/jobs/sd-006"
+        },
+        {
+          "job_id": "sd-010",
+          "source_url": "https://example.invalid/halcyon/jobs/sd-010"
+        },
+        {
+          "job_id": "sd-018",
+          "source_url": "https://example.invalid/redshaw/jobs/sd-018"
+        },
+        {
+          "job_id": "sd-021",
+          "source_url": "https://example.invalid/cinderpoint/jobs/sd-021"
+        }
+      ],
+      "has_evidence": false
+    },
+    {
+      "id": "distributed_systems",
+      "label": "Distributed systems",
+      "category": "practice",
+      "posting_count": 2,
+      "evidence": [
+        {
+          "job_id": "sd-007",
+          "source_url": "https://example.invalid/fernbrook/jobs/sd-007"
+        },
+        {
+          "job_id": "sd-014",
+          "source_url": "https://example.invalid/ashgrove/jobs/sd-014"
+        }
+      ],
+      "has_evidence": false
+    },
+    {
+      "id": "terraform",
+      "label": "Terraform",
+      "category": "infra",
+      "posting_count": 2,
+      "evidence": [
+        {
+          "job_id": "sd-004",
+          "source_url": "https://example.invalid/rivergate/jobs/sd-004"
+        },
+        {
+          "job_id": "sd-008",
+          "source_url": "https://example.invalid/marrow/jobs/sd-008"
+        }
+      ],
+      "has_evidence": false
+    },
+    {
+      "id": "kafka",
+      "label": "Kafka",
+      "category": "data_infra",
+      "posting_count": 1,
+      "evidence": [
+        {
+          "job_id": "sd-011",
+          "source_url": "https://example.invalid/copperfield/jobs/sd-011"
+        }
+      ],
+      "has_evidence": false
+    },
+    {
+      "id": "mlops",
+      "label": "MLOps",
+      "category": "practice",
+      "posting_count": 1,
+      "evidence": [
+        {
+          "job_id": "sd-005",
+          "source_url": "https://example.invalid/amberline/jobs/sd-005"
+        }
+      ],
+      "has_evidence": false
+    },
+    {
+      "id": "scikit_learn",
+      "label": "scikit-learn",
+      "category": "ml_framework",
+      "posting_count": 1,
+      "evidence": [
+        {
+          "job_id": "sd-016",
+          "source_url": "https://example.invalid/thornfield/jobs/sd-016"
+        }
+      ],
+      "has_evidence": false
+    }
+  ]
+}
