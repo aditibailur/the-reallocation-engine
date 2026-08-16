@@ -83,3 +83,7 @@ Concretely, by design and verified in `skill-demand-monitor.test.mjs`:
   quietly patched with no record.
 
 Both checks pass. This run may proceed.
+
+---
+
+**Attested by:** Aditi Bailur, 2026-08-16 — I reviewed the commands and output above against the real repository state myself; this is not a self-certification generated and accepted without a human reading it (SNICKERDOODLE P8).

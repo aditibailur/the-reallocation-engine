@@ -26,9 +26,17 @@ const tmpRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'skill-demand-test-'));
 let passed = 0, failed = 0;
 
 function run(postingsPath, extraArgs = []) {
+  return runFull(postingsPath, extraArgs).json;
+}
+
+function runFull(postingsPath, extraArgs = []) {
   const outDir = fs.mkdtempSync(path.join(tmpRoot, 'run-'));
-  execFileSync('node', [SCRIPT, postingsPath, '--out-dir', outDir, '--md', path.join(outDir, 'report.md'), ...extraArgs], { stdio: 'pipe' });
-  return JSON.parse(fs.readFileSync(path.join(outDir, 'skill-demand.json'), 'utf8'));
+  const mdPath = path.join(outDir, 'report.md');
+  execFileSync('node', [SCRIPT, postingsPath, '--out-dir', outDir, '--md', mdPath, ...extraArgs], { stdio: 'pipe' });
+  return {
+    json: JSON.parse(fs.readFileSync(path.join(outDir, 'skill-demand.json'), 'utf8')),
+    md: fs.readFileSync(mdPath, 'utf8'),
+  };
 }
 
 function writeFixture(name, postings) {
@@ -101,6 +109,22 @@ testCase('postings with no recognized skills set low_coverage=true rather than a
   assert.equal(result.low_coverage, true, 'zero-hit rate of 100% must exceed the 40% coverage floor');
   assert.equal(result.zero_hit_rate, 1, 'every posting in this fixture uses only out-of-taxonomy terms by construction');
   assert.deepEqual(result.skills, [], 'no taxonomy skill should match this filler text');
+});
+
+// ── Case 5: overriding --min-sample below the default must never be reported as
+// unconditional confidence -- this is the exact bug the 2026-08-14 real run found:
+// an early version's headline said "enough data to trust this ranking" and the gates
+// table printed the tool's hardcoded default instead of the threshold actually used,
+// whenever the gate mechanically passed. This reproduces that exact scenario against
+// the fixed code and would fail if the honesty fix were ever reverted. ──
+testCase('a --min-sample override below the default is threaded through and flagged, never reported as unconditional confidence', () => {
+  const { json: result, md } = runFull(EXAMPLE_POSTINGS, ['--role-filter', 'ai engineer', '--min-sample', '2']);
+  assert.equal(result.status, 'ranked');
+  assert.equal(result.min_sample_used, 2, 'the report must reflect the threshold actually enforced, not the tool default');
+  assert.equal(result.min_sample_overridden_below_default, true, 'an override below the default (20) must be flagged as such');
+  assert.match(md, /sample-size floor was manually lowered to 2/, 'the report must loudly caution that the floor was manually weakened');
+  assert.match(md, /overridden below default of 20/, 'the gates table must show the real threshold and that it was overridden, not the default dressed up as the value checked');
+  assert.doesNotMatch(md, /enough data to trust this ranking/i, 'clearing a manually-lowered gate must never be reported as unconditional confidence -- the exact bug this test guards against');
 });
 
 console.log(`\n${passed} passed, ${failed} failed`);
